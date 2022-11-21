@@ -58,4 +58,14 @@ public class PlayList {
         return false;
     }
 
+    public String reproduceAudio(String audioName) {
+        for (int i = 0; i < audios.size(); i++) {
+            if (audioName.equalsIgnoreCase(audios.get(i).getName())) {
+                audios.get(i).setReproductions(audios.get(i).getReproductions() + 1);
+                return audios.get(i).getName();
+            }
+        }
+        return "";
+    }
+
 }

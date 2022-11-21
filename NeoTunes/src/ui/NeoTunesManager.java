@@ -20,12 +20,16 @@ public class NeoTunesManager {
 
     public void menu() {
         int menu = 0;
-        while (menu != 4) {
+        while (menu != 7) {
             System.out.println("---------------------------------" +
                     "\nHi, welcome to NeoTunes. ¿What do you want to do? " +
                     "\n1. Create new user" +
                     "\n2. Register new audio" +
-                    "\n3. Playlists");
+                    "\n3. Playlists" +
+                    "\n4. Reproduce an audio" +
+                    "\n5. Buy a song" +
+                    "\n6. Admin summary" +
+                    "\n7. Exit");
             menu = sc.nextInt();
             switch (menu) {
                 case 1:
@@ -52,11 +56,13 @@ public class NeoTunesManager {
                     addAudio();
                     break;
                 case 3:
+                    int menuPlaylist = 0;
                     System.out.println("---------------------------------" +
                             "\nWhat do you want to do? " +
                             "\n1. Create a playlist" +
-                            "\n2. Edit playlist");
-                    int menuPlaylist = sc.nextInt();
+                            "\n2. Edit playlist" +
+                            "\n3. Share a playlist");
+                    menuPlaylist = sc.nextInt();
                     switch (menuPlaylist) {
                         case 1:
                             System.out.println("---------------------------------" +
@@ -66,9 +72,33 @@ public class NeoTunesManager {
                         case 2:
                             System.out.println("---------------------------------" +
                                     "\nPlease insert all the necessary information");
-
+                            editPlaylist();
+                            break;
+                        case 3:
+                            break;
                     }
-
+                    break;
+                case 4:
+                    reproduceAudio();
+                    break;
+                case 5:
+                    buyAudio();
+                    break;
+                case 6:
+                    System.out.println("---------------------------------" +
+                            "\nPlease select which summary do you want" +
+                            "\n1. Total reproductions" +
+                            "\n2. Genre of podcast and song more listened" +
+                            "\n3. Top 5 artist" +
+                            "\n4. Top 5 content creator" +
+                            "\n5. Top 10 songs" +
+                            "\n6. Top 10 podcast" +
+                            "\n7. Number of songs sold and $" +
+                            "\n8. Best selling song");
+                    sc.nextLine();
+                    int adminSummaryMenu = sc.nextInt();
+                    adminSummary(adminSummaryMenu);
+                    break;
             }
         }
     }
@@ -82,6 +112,7 @@ public class NeoTunesManager {
         int standardOrPremium = sc.nextInt();
         System.out.println("---------------------------------" +
                 "\nPlease enter a nickname ");
+        sc.nextLine();
         String nickname = sc.nextLine();
         System.out.println("---------------------------------" +
                 "\nPlease enter your ID ");
@@ -226,6 +257,7 @@ public class NeoTunesManager {
             case 1:
                 System.out.println("---------------------------------" +
                         "\nPlease enter the name of the playlist you want to modify");
+                sc.nextLine();
                 String playlistName = sc.nextLine();
                 System.out.println("---------------------------------" +
                         "\nPlease enter the name of the audio");
@@ -241,6 +273,7 @@ public class NeoTunesManager {
             case 2:
                 System.out.println("---------------------------------" +
                         "\nPlease enter the name of the playlist you want to modify");
+                sc.nextLine();
                 String playlistNameDelete = sc.nextLine();
                 System.out.println("---------------------------------" +
                         "\nPlease enter the name of the audio");
@@ -252,6 +285,79 @@ public class NeoTunesManager {
                     System.out.println("---------------------------------" +
                             "\nThe audio was not deleted correctly in the playlist");
                 }
+                break;
+        }
+    }
+
+    public void reproduceAudio() {
+        System.out.println("---------------------------------" +
+                "\nPlease enter your nickname");
+        sc.nextLine();
+        String consumerName = sc.nextLine();
+        System.out.println("---------------------------------" +
+                "\nPlease enter the name of the playlist");
+        String playlistName = sc.nextLine();
+        System.out.println("---------------------------------" +
+                "\nPlease enter the name of the audio that you want to hear");
+        String audioName =sc.nextLine();
+        String reproduceName = neoController.reproduceAudio(consumerName, playlistName, audioName);
+        if (reproduceName.equalsIgnoreCase("")) {
+            System.out.println("---------------------------------" +
+                    "\nWe can't reproduce that song, please check the information");
+        } else {
+            System.out.println("----------------------------------" +
+                    "\n---------REPRODUCING AUDIO---------" +
+                    "\n---------" + reproduceName + "---------");
+        }
+    }
+
+    public void buyAudio() {
+        System.out.println("---------------------------------" +
+                "\nPlease enter your nickname");
+        sc.nextLine();
+        String consumerName = sc.nextLine();
+        System.out.println("---------------------------------" +
+                "\nPlease enter the name of the song or podcast that you want to buy");
+        String audioName = sc.nextLine();
+        if (neoController.buyAudio(consumerName, audioName)) {
+            System.out.println("---------------------------------" +
+                    "\nThank you for your purchase");
+        } else {
+            System.out.println("---------------------------------" +
+                    "\nThere was an error with your purchase");
+        }
+    }
+
+    public void adminSummary(int adminSummaryMenu) {
+        switch (adminSummaryMenu) {
+            case 1:
+                System.out.println("---------------------------------" +
+                        "\nTotal reproductions in all the platform: " + neoController.totalReproductions());
+                break;
+            case 2:
+                System.out.println("---------------------------------" +
+                        "\nThe genres are:" +
+                        "\n" + neoController.songGenre() +
+                        "\n" + neoController.podcastGenre());
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                System.out.println("---------------------------------" +
+                        "\nGenres and its profits: " +
+                        "\n" + neoController.allSoldSongs());
+                break;
+            case 8:
+
+                System.out.println("---------------------------------" +
+                        "\nBest selling song is: " +
+                        "\n" + neoController.bestSelling());
                 break;
         }
     }
